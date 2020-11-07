@@ -45,9 +45,9 @@ def getYZMImage(url):
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
         'Connection': 'keep-alive',
         'Cookie': cookievalue,
-        'Host': 'm.dean.nsu.edu.cn',
-        'Origin': 'http://m.dean.nsu.edu.cn',
-        'Referer': 'http://m.dean.nsu.edu.cn/_data/login_home.aspx',
+        'Host': '',
+        'Origin': '',
+        'Referer': '',
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36'
     }
@@ -74,53 +74,27 @@ def get_cookie():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36',
         'Cookie': 'name=value; UM_distinctid=1748faead8613a-0c46b93b56a09d-3323767-144000-1748faead88203; name=value;ASP.NET_SessionId=f5ikta2pgnizenn0042aga45'
     }
-    response = requests.get("http://m.dean.nsu.edu.cn", headers=headers)
+    response = requests.get("", headers=headers)
     global g_cookie
     g_cookie = getCookieByRequestUrl(response)
 
-def compare(m,userid):
-    conn = pymysql.connect(
-        host="127.0.0.1",
-        user="root",
-        password="",
-        database="demo",
-        charset="utf8")
-
-    cursor_test = conn.cursor()
-    sql = """select * from student"""
-    cursor_test.execute(sql)
-    data_res = cursor_test.fetchall()
-
-    dic = dict()
-    for row in data_res:
-        dic[row[0]] = row[1]
-
-    conn.close()
-
-    temp = "".join(m)
-    if dic.get(userid, "err") == temp:
-        print("登录成功")
-        ui.msg1()
-    else:
-        print("登录失败")
-        ui.msg2()
 
 def login():
     loginhomeheaders = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36',
         'Cookie': g_cookie,
-        'Referer': 'http://m.dean.nsu.edu.cn'
+        'Referer': ''
     }
 
-    response = requests.get("http://m.dean.nsu.edu.cn/_data/login_home.aspx", headers=loginhomeheaders)
+    response = requests.get("", headers=loginhomeheaders)
     VIEWSTATE = re.search(r'<input type="hidden" name="__VIEWSTATE" value="(.*)"', response.text).group(1)
 
     userid = ui.UserName.text()
     pwd = ui.PassWord.text()
     verty_text = ui.code_de.text()
 
-    dsdsdsdsdxcxdfgfg = md5(userid + md5(pwd)[:30].upper() + "12636")[:30].upper()  # userid为用户账号，即学号
-    fgfggfdgtyuuyyuuckjg = md5(md5(verty_text.upper())[:30].upper() + "12636")[:30].upper()  # verty_text为验证码
+    dsdsdsdsdxcxdfgfg = md5(userid + md5(pwd)[:30].upper() + "10000")[:30].upper()  # userid为用户账号，即学号
+    fgfggfdgtyuuyyuuckjg = md5(md5(verty_text.upper())[:30].upper() + "10000")[:30].upper()  # verty_text为验证码
     #组拼 data
     login_data  = {
         '__VIEWSTATE':VIEWSTATE,
@@ -149,13 +123,13 @@ def login():
         'Connection': 'keep-alive',
         'Content-Length': '6442',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Host':'m.dean.nsu.edu.cn',
-        'Origin': 'http://m.dean.nsu.edu.cn',
-        'Referer': 'http://m.dean.nsu.edu.cn/_data/login_home.aspx',
+        'Host':'',
+        'Origin': '',
+        'Referer': '',
         'Upgrade-Insecure-Requests': '1'
     }
 
-    loginurl = "http://m.dean.nsu.edu.cn/_data/login_home.aspx"
+    loginurl = ""
 
     session = requests.session()
     response = session.post(url=loginurl,data=login_data,headers=login_headers)
@@ -163,15 +137,15 @@ def login():
     getinfoheaders = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
         'Cookie': cookievalue,
-        'Referer': 'http://m.dean.nsu.edu.cn/xsxj/Stu_MyInfo.aspx',
+        'Referer': '',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
         'Connection': 'keep-alive',
-        'Host': 'm.dean.nsu.edu.cn',
+        'Host': '',
         'Upgrade-Insecure-Requests': '1'
     }
-    response1 = session.get(url="http://m.dean.nsu.edu.cn/xsxj/Stu_MyInfo_RPT.aspx",headers=getinfoheaders)
+    response1 = session.get(url="",headers=getinfoheaders)
     pattern = re.compile('''姓&ensp;&ensp;&ensp;&ensp;名</td><td colspan='2'>(.*?)<br>''')
     m = pattern.findall(response1.text)
     print(m)
@@ -186,7 +160,7 @@ if __name__ == '__main__':
     Window.show()
 
     get_cookie()
-    url = "http://m.dean.nsu.edu.cn/sys/ValidateCode.aspx?t=" + str(random.randint(0, 999))
+    url = "" + str(random.randint(0, 999))
     getYZMImage(url=url)
     
     ui.log_in.clicked.connect(login)
